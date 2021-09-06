@@ -76,7 +76,17 @@ class homePageController extends Controller
             { 
                 $single_category_articles = articles::where('category_id', '=', $single_category->id)
                 ->take(3)->get();
-                $single_category->single_category_articles = $single_category_articles;
+                $count = count($single_category_articles);
+                if($count>0)
+                {
+                   $single_category->check_articles = true;
+                   $single_category->single_category_articles = $single_category_articles;
+                }
+                else
+                {
+                    $single_category->check_articles = false;
+                    $single_category->single_category_articles = $single_category_articles;
+                }
                 // dd($single_category_articles);
             }
             return response()->json([
