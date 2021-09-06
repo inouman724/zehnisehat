@@ -15,4 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/getallarticles','Frontend\ArticleController@getallarticles');
+Route::get('/getSingleLatestCategory','Frontend\HomePageController@getSingleLatestCategory');
+
 

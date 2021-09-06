@@ -10,8 +10,12 @@ class ArticleController extends Controller
 {
     //
     public function getallarticles(){
-        $articles = articles::find(1);
-        dd($articles);
+        $articles = articles::latest()->first();
+        return response()->json([
+            'articles' => $articles,
+            // 'name' => 'Abigail',
+            // 'state' => 'CA',
+        ]);
     }
     
 }

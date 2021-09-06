@@ -16,4 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// homepage apis starts here
 Route::get('/getallarticles','Frontend\ArticleController@getallarticles');
+Route::get('/getSingleLatestCategory','Frontend\HomePageController@getSingleLatestCategory');
