@@ -20,9 +20,6 @@ class homePageController extends Controller
                 'status' => 200,
                 'message' => 'Data Found',
                 'data' => $latest_category,
-                // 'category_title' => $latest_category->title,
-                // 'published_by' => $latest_category->full_name,
-                // 'date' => $latest_category->created_at,
             ]);
         }
         else
@@ -35,6 +32,38 @@ class homePageController extends Controller
         
     }
     // get Latest category api ends here
-    //---------------------------------------------------------------------------------------//
+    //---------------------------------------------------------------------------------------/
+    // get getLatestSevenCategories api starts here
+    public function getLatestSevenCategories(){
+        $latest_categories = category::select('categories.id','categories.title', 'categories.created_at', 
+        'users.full_name')
+        ->join('users', 'categories.published_by', '=', 'users.id')
+        ->orderBy('created_at', 'DESC')
+        ->take(7)->get();
+        // dd($latest_categories);
+        if($latest_categories)
+        {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_categories,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getLatestSevenCategories api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getSingleCategoryArticles api starts here
+    public function getSingleCategoryArticles(){
+        
+    }
+    // get getSingleCategoryArticles api ends here
+    //---------------------------------------------------------------------------------------/
     
 }
