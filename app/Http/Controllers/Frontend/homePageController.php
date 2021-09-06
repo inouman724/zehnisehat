@@ -63,7 +63,7 @@ class homePageController extends Controller
     // get getLatestSevenCategories api ends here
     //---------------------------------------------------------------------------------------/
     // get getSingleCategoryArticles api starts here
-    public function getSingleCategoryArticles(){
+    public function getLatestcategoriesArticles(){
         $latest_categories = category::select('categories.id','categories.title', 'categories.created_at', 
         'users.full_name')
         ->join('users', 'categories.published_by', '=', 'users.id')
