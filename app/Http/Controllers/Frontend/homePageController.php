@@ -8,6 +8,7 @@ use Redirect;
 use Validator;
 use App\category;
 use App\articles;
+use App\therapistReview;
 use Illuminate\Support\Str;
 class homePageController extends Controller
 {
@@ -191,6 +192,32 @@ class homePageController extends Controller
         }
     }
     // get getRandomArticles api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getUserReviews api starts here
+    public function getUserReviews(){
+        $latest_reviews = therapistReview::select('therapist_reviews.id','therapist_reviews.feedback',
+        'users.full_name','users.image')
+        ->where('rating' , '>=','4')
+        ->join('users', 'therapist_reviews.patient_id', '=', 'users.id')
+        ->orderby('therapist_reviews.id', 'desc')->take(9)
+        ->get();
+        if($latest_reviews)
+        {       
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_reviews,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getUserReviews api ends here
     //---------------------------------------------------------------------------------------/
     
     

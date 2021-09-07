@@ -25,3 +25,4 @@ Route::get('/getLatestcategoriesArticles','Frontend\HomePageController@getLatest
 Route::get('/getLatestEightArticles','Frontend\HomePageController@getLatestEightArticles');
 Route::get('/getAllCategoriesArticles','Frontend\HomePageController@getAllCategoriesArticles');
 Route::get('/getRandomArticles','Frontend\HomePageController@getRandomArticles');
+Route::get('/getUserReviews','Frontend\HomePageController@getUserReviews');
