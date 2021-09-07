@@ -126,6 +126,29 @@ class homePageController extends Controller
         }
     }
     // get getLatestEightArticles api ends here
+    //---------------------------------------------------------------------------------------//
+    // get getAllCategoriesArticles api starts here
+    public function getAllCategoriesArticles(){
+        $latest_articles = articles::select('id','title', 'category_id','description')
+        ->groupBy('category_id')->orderby('id', 'desc')->take(6)
+        ->get();
+        if($latest_articles)
+        {       
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_articles,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getAllCategoriesArticles api ends here
     //---------------------------------------------------------------------------------------/
 
     
