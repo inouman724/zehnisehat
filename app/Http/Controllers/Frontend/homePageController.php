@@ -8,7 +8,7 @@ use Redirect;
 use Validator;
 use App\category;
 use App\articles;
-
+use Illuminate\Support\Str;
 class homePageController extends Controller
 {
     // get Latest category api starts here
@@ -132,8 +132,16 @@ class homePageController extends Controller
         $latest_articles = articles::select('id','title', 'category_id','description')
         ->groupBy('category_id')->orderby('id', 'desc')->take(6)
         ->get();
-        if($latest_articles)
+        $count = count($latest_articles);
+        if($count>0)
         {       
+            foreach($latest_articles as $single_article)
+            {
+                $short_des = Str::limit($single_article->description, 150);
+                // Str::words($this->$single_article->description, '25');
+                $single_article->short_des = $short_des;
+                // dd($short_des);
+            }
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Found',
