@@ -22,3 +22,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/getSingleLatestCategory','Frontend\HomePageController@getSingleLatestCategory');
 Route::get('/getLatestSevenCategories','Frontend\HomePageController@getLatestSevenCategories');
 Route::get('/getLatestcategoriesArticles','Frontend\HomePageController@getLatestcategoriesArticles');
+Route::get('/getLatestEightArticles','Frontend\HomePageController@getLatestEightArticles');

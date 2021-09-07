@@ -13,9 +13,9 @@ class homePageController extends Controller
 {
     // get Latest category api starts here
     public function getSingleLatestCategory(){
-        $latest_category = category::select('categories.title', 'categories.created_at', 'users.full_name')
+        $latest_category = category::select('categories.id','categories.title', 'categories.created_at', 'users.full_name')
         ->join('users', 'categories.published_by', '=', 'users.id')
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('categories.id', 'DESC')
         ->first();
         if($latest_category)
         {
@@ -104,5 +104,29 @@ class homePageController extends Controller
     }
     // get getLatestcategoriesArticles api ends here
     //---------------------------------------------------------------------------------------/
+    // get getLatestEightArticles api starts here
+    public function getLatestEightArticles(){
+        $latest_articles = articles::select('id','title','description')
+        ->orderBy('id', 'DESC')
+        ->take(8)->get();
+        if($latest_articles)
+        {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_articles,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getLatestEightArticles api ends here
+    //---------------------------------------------------------------------------------------/
+
     
 }
