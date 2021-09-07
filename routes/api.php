@@ -24,3 +24,4 @@ Route::get('/getLatestSevenCategories','Frontend\HomePageController@getLatestSev
 Route::get('/getLatestcategoriesArticles','Frontend\HomePageController@getLatestcategoriesArticles');
 Route::get('/getLatestEightArticles','Frontend\HomePageController@getLatestEightArticles');
 Route::get('/getAllCategoriesArticles','Frontend\HomePageController@getAllCategoriesArticles');
+Route::get('/getRandomArticles','Frontend\HomePageController@getRandomArticles');
