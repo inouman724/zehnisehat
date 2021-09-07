@@ -41,7 +41,7 @@ class homePageController extends Controller
         $latest_categories = category::select('categories.id','categories.title', 'categories.created_at', 
         'users.full_name')
         ->join('users', 'categories.published_by', '=', 'users.id')
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('id', 'DESC')
         ->take(7)->get();
         // dd($latest_categories);
         if($latest_categories)
@@ -62,14 +62,13 @@ class homePageController extends Controller
     }
     // get getLatestSevenCategories api ends here
     //---------------------------------------------------------------------------------------/
-    // get getSingleCategoryArticles api starts here
+    // get getLatestcategoriesArticles api starts here
     public function getLatestcategoriesArticles(){
         $latest_categories = category::select('categories.id','categories.title', 'categories.created_at', 
         'users.full_name')
         ->join('users', 'categories.published_by', '=', 'users.id')
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('id', 'DESC')
         ->take(7)->get();
-        // dd($latest_categories);
         if($latest_categories)
         {
             foreach ($latest_categories as $single_category)
@@ -103,7 +102,7 @@ class homePageController extends Controller
             ]);
         }
     }
-    // get getSingleCategoryArticles api ends here
+    // get getLatestcategoriesArticles api ends here
     //---------------------------------------------------------------------------------------/
     
 }
