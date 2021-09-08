@@ -26,3 +26,4 @@ Route::get('/getLatestEightArticles','Frontend\HomePageController@getLatestEight
 Route::get('/getAllCategoriesArticles','Frontend\HomePageController@getAllCategoriesArticles');
 Route::get('/getRandomArticles','Frontend\HomePageController@getRandomArticles');
 Route::get('/getUserReviews','Frontend\HomePageController@getUserReviews');
+Route::get('/getAllTherapists','Frontend\HomePageController@getAllTherapists');

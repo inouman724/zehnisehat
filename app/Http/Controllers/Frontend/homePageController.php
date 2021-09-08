@@ -9,6 +9,7 @@ use Validator;
 use App\category;
 use App\articles;
 use App\therapistReview;
+use App\User;
 use Illuminate\Support\Str;
 class homePageController extends Controller
 {
@@ -164,9 +165,9 @@ class homePageController extends Controller
         $latest_articles = articles::inRandomOrder()
         ->join('users', 'articles.published_by', '=', 'users.id')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
-        ->select('articles.id','articles.title', 'articles.description', 'articles.image', 
-        'categories.title','users.full_name')
-        ->groupBy('category_id')->orderby('id', 'desc')->take(3)
+        ->select('articles.id','articles.title as article_title', 'articles.description', 'articles.image', 
+        'categories.title as category_title','users.full_name')
+        ->groupBy('category_id')->orderby('articles.id', 'desc')->take(3)
         ->get();
         $count = count($latest_articles);
         if($count>0)
@@ -218,6 +219,54 @@ class homePageController extends Controller
         }
     }
     // get getUserReviews api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getAllTherapists api starts here
+    public function getAllTherapists(){
+        $therapists = User::select('users.id','users.full_name','users.image',
+        'categories.title as category_title','therapist_details.profession','therapist_details.specialization')
+        ->join('therapist_details', 'users.id', '=', 'therapist_details.therapist_id')
+        ->join('categories', 'therapist_details.category_id', '=', 'categories.id')
+        ->where('users.is_therapist', true)
+        ->get();
+
+        if($therapists)
+        {     
+            foreach($therapists as $single_therapist)
+            {
+                $t_reviws = therapistReview::where('therapist_id',$single_therapist->id)
+                ->get();
+                $count = count($t_reviws);
+                if($count>0)
+                {
+                    // dd($count);
+                    $rating_raw = therapistReview::where('therapist_id', $single_therapist->id)
+                    ->avg('rating');
+                    $rating = round($rating_raw, 2);
+                    $single_therapist->rating = $rating;
+                    $single_therapist->reviews = $count;
+                    
+                }
+                else
+                {
+                    $single_therapist->rating = 'not rated yet';
+                    $single_therapist->reviews = '0';
+                }
+            }  
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $therapists,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getAllTherapists api ends here
     //---------------------------------------------------------------------------------------/
     
     
