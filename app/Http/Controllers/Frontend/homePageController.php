@@ -10,6 +10,7 @@ use App\category;
 use App\articles;
 use App\therapistReview;
 use App\User;
+use App\categoryTag;
 use Illuminate\Support\Str;
 class homePageController extends Controller
 {
@@ -268,6 +269,74 @@ class homePageController extends Controller
     }
     // get getAllTherapists api ends here
     //---------------------------------------------------------------------------------------/
-    
-    
+    // get getLatest9Categories api starts here
+    public function getLatest9Categories(){
+        $latest_categories = category::select('categories.id','categories.title','categories.picture',
+        'categories.description' ,'categories.created_at', 
+        'users.full_name')
+        ->join('users', 'categories.published_by', '=', 'users.id')
+        ->orderBy('id', 'DESC')
+        ->take(9)->get();
+        // dd($latest_categories);
+        if($latest_categories)
+        {
+            
+            foreach($latest_categories as $single_latest_category)
+            {
+                $short_des = Str::limit($single_latest_category->description, 150);
+                // Str::words($this->$single_latest_category->description, '25');
+                $single_latest_category->short_des = $short_des;
+                // dd($short_des);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_categories,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getLatest9Categories api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getAllArticles api starts here
+    public function getAllArticles(){
+        $latest_articles = articles::select('articles.id','categories.id as cat_id','articles.title as article_title', 
+        'articles.description', 'articles.image','category_tags.tag', 
+        'categories.title as category_title','users.full_name', 'articles.created_at')
+        ->join('users', 'articles.published_by', '=', 'users.id')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->Leftjoin('category_tags', 'articles.category_id', '=', 'category_tags.category_id')
+        ->orderby('articles.id', 'desc')
+        ->paginate(4);
+        // dd($latest_articles);
+        $count = count($latest_articles);
+        if($count>0)
+        {       
+            foreach($latest_articles as $single_article)
+            {
+                $short_des = Str::limit($single_article->description, 150);
+                $single_article->short_des = $short_des;
+                // dd($short_des);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_articles,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getAllArticles api ends here
 }
