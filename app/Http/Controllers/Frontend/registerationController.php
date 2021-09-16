@@ -9,6 +9,7 @@ use App\User;
 use App\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use HasApiTokens;
+use App\str_random;
 // use Authenticatable;
 
 class registerationController extends Controller
@@ -29,6 +30,8 @@ class registerationController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         // dd($request->all());
+            // $custom_access_token = str_random(16);
+            // dd(str_random(16));
         $user = new User;
         if($request->role == 'patient')
         {
@@ -47,6 +50,7 @@ class registerationController extends Controller
         $user->password = bcrypt($request->password);
         $user->is_email_verified = false;
         $user->is_verified_by_admin = false;
+        $user->_token = str_random(16);
         if($user->save())
         {
             return response()->json([
