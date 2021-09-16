@@ -98,6 +98,7 @@ class registerationController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Success',
+                'id' => $user->id,
                 'token' => $token,
                 'role' => $user_role,
             ]);
@@ -109,8 +110,8 @@ class registerationController extends Controller
         }
     }
 
-//     public function home()
-//     {
-//         dd('You are active');
-//     }
-// }
+    //     public function home()
+    //     {
+    //         dd('You are active');
+    //     }
+}
