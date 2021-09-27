@@ -17,6 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Registeration and login apis starts here
+Route::post('/register','Frontend\registerationController@register');
+Route::post('/login','Frontend\registerationController@login');
+
+
 // homepage apis starts here
 // Route::get('/getallarticles','Frontend\ArticleController@getallarticles');
 Route::get('/getSingleLatestCategory','Frontend\HomePageController@getSingleLatestCategory');
@@ -29,3 +34,10 @@ Route::get('/getUserReviews','Frontend\HomePageController@getUserReviews');
 Route::get('/getAllTherapists','Frontend\HomePageController@getAllTherapists');
 Route::get('/getLatest9Categories','Frontend\HomePageController@getLatest9Categories');
 Route::get('/getAllArticles','Frontend\HomePageController@getAllArticles');
+
+
+Route::middleware(['CheckRole'])->group(function(){
+ 
+    Route::post('home', 'Frontend\registerationController@home');
+    
+    });
