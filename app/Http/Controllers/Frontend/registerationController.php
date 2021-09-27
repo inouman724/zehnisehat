@@ -15,7 +15,8 @@ use App\str_random;
 class registerationController extends Controller
 // class registerationController extends //Authenticatable
 {
-    //
+    //-----------------------------------------------------------------------------------------//
+    //register user api starts here
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -32,6 +33,10 @@ class registerationController extends Controller
         // dd($request->all());
             // $custom_access_token = str_random(16);
             // dd(str_random(16));
+            // $data = new Data();
+            // $data->status = true;
+            // $data->message = 'User registered successfully.';
+            
         $user = new User;
         if($request->role == 'patient')
         {
@@ -53,9 +58,13 @@ class registerationController extends Controller
         $user->_token = str_random(16); 
         if($user->save())
         {
-            return response()->json([
+            $data = (object) [
                 'status' => true,
-                'message' => 'User registered successfully.',
+                'messge' => 'User registered successfully.',
+            ];
+            // return $this->sendResponse($this->success, 'User register successfully.');       
+            return response()->json([
+                'data' => $data,
             ]);
         }
         else
@@ -72,9 +81,10 @@ class registerationController extends Controller
         // $token =  $user->createToken('ZehniSehatUser')->accessToken;
         
     }
-   
+    //register api ends here
+    //-----------------------------------------------------------------------------------------//
     /**
-     * Login api
+     * Login api starts here
      *
     //  * @return \Illuminate\Http\Response
      */
@@ -112,6 +122,7 @@ class registerationController extends Controller
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
     }
+    // login api ends here
 
     //     public function home()
     //     {
