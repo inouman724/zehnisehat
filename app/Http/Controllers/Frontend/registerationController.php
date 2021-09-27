@@ -16,7 +16,7 @@ class registerationController extends Controller
 // class registerationController extends //Authenticatable
 {
     //
-    public function registerUser(Request $request)
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'full_name' => 'required',
