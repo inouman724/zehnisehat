@@ -16,7 +16,7 @@ class registerationController extends Controller
 // class registerationController extends //Authenticatable
 {
     //
-    public function register(Request $request)
+    public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'full_name' => 'required',
@@ -50,13 +50,12 @@ class registerationController extends Controller
         $user->password = bcrypt($request->password);
         $user->is_email_verified = false;
         $user->is_verified_by_admin = false;
-        $user->_token = str_random(16);
+        $user->_token = str_random(16); 
         if($user->save())
         {
             return response()->json([
                 'status' => true,
                 'message' => 'User registered successfully.',
-                // 'token' => $token,
             ]);
         }
         else

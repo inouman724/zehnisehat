@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // Registeration and login apis starts here
-Route::post('/register','Frontend\registerationController@register');
+Route::post('/registerUser','Frontend\registerationController@registerUser');
 Route::post('/login','Frontend\registerationController@login');
 
 
