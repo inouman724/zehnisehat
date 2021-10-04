@@ -118,6 +118,7 @@ class registerationController extends Controller
         }
     }
     // login api ends here
+    //-----------------------------------------------------------------------------------------//
 
     //     public function home()
     //     {
