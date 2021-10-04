@@ -18,21 +18,22 @@ class patientApisControler extends Controller
     // above function needs to be uncommented if the middleware needs to be used here.
     // Get Patient Appointments Api starts here
     public function getPatientAppointments(Request $request){
-        
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'user_id' => 'required',
+        // ]);
    
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }  
-        $user_exist = User::find($request->user_id);
+        // if($validator->fails()){
+        //     return $this->sendError('Validation Error.', $validator->errors());       
+        // }  
+        $id = $request->user()->id;
+        $user_exist = User::find($id);
         if($user_exist)
         {
-            $user_appointments = patientAppointment::where('patient_appointments.patient_id', $request->user_id)
+            $user_appointments = patientAppointment::where('patient_appointments.patient_id', $id)
             ->join('users', 'patient_appointments.patient_id', '=', 'users.id')
             ->join('therapist_details', 'patient_appointments.therapist_id', '=', 'therapist_details.therapist_id')
-            ->select('users.full_name','therapist_details.therapist_fee','patient_appointments.checkup_day_time',
+            ->select('users.full_name','users.image','therapist_details.therapist_fee',
+            'patient_appointments.checkup_day_time',
             'patient_appointments.follow_up_date','patient_appointments.status',
             'patient_appointments.created_at')
             ->get();
