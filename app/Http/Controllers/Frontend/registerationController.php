@@ -29,14 +29,7 @@ class registerationController extends Controller
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
-        }
-        // dd($request->all());
-            // $custom_access_token = str_random(16);
-            // dd(str_random(16));
-            // $data = new Data();
-            // $data->status = true;
-            // $data->message = 'User registered successfully.';
-            
+        }            
         $user = new User;
         if($request->role == 'patient')
         {
@@ -107,13 +100,15 @@ class registerationController extends Controller
             // $success['token'] =  $user->createToken('ZehniSehatUser')-> accessToken; 
             $token =  $user->createToken('ZehniSehatUser')-> accessToken;
             $user_role = $role; 
+            $user_data = new User;
+            $user_data->id = $user->id;
+            $user_data->token = $token;
+            $user_data->role = $user_role;
             // $success['full_name'] =  $user->full_name;
             return response()->json([
                 'status' => true,
                 'message' => 'Success',
-                'id' => $user->id,
-                'token' => $token,
-                'role' => $user_role,
+                'data' => $user_data,
             ]);
    
             // return $this->sendResponse($success, 'User login successfully.');
@@ -123,6 +118,7 @@ class registerationController extends Controller
         }
     }
     // login api ends here
+    //-----------------------------------------------------------------------------------------//
 
     //     public function home()
     //     {
