@@ -23,10 +23,8 @@ Route::post('/register','Frontend\registerationController@register');
 // Route::post('/login','Frontend\registerationController@login');
 Route::post('login', [ 'as' => 'login', 'uses' => 'Frontend\registerationController@login']);
 
-Route::middleware(['auth:api','CheckIsPatient'])->group(function () { 
-
-    // Route::post('getPatientAppointments','Frontend\patientApisControler@getPatientAppointments')->middleware('CheckIsPatient');
-    Route::post('getPatientAppointments','Frontend\patientApisControler@getPatientAppointments');
+Route::middleware(['auth:api'])->group(function () { 
+    Route::post('getPatientAppointments','Frontend\patientApisControler@getPatientAppointments')->middleware('CheckIsPatient');
 
 });
 
