@@ -12,7 +12,7 @@ use App\therapistReview;
 use App\User;
 use App\categoryTag;
 use Illuminate\Support\Str;
-class homePageController extends Controller
+class HomePageController extends Controller
 {
     // get Latest category api starts here
     public function getSingleLatestCategory(){
