@@ -339,4 +339,45 @@ class HomePageController extends Controller
         }
     }
     // get getAllArticles api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getLatestSevenCategories api starts here
+    public function getSingleArticle(request $request){
+        $validator = Validator::make($request->all(), [
+            'slug' => 'required',
+            
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        //getting article according to the slug
+        $article = articles::where('slug',$request->slug)
+        ->first();
+        if($article)
+        {
+            // getting articles of the same category as the main article
+            $category_articles = articles::select('articles.id','articles.title','articles.slug','articles.image',
+            'articles.description' ,'articles.created_at')
+            ->where('category_id', $article->category_id)
+            ->take(5)->get();
+            //getting latest 6 categories
+            $latest_categories = category::select('categories.id','categories.title')
+            ->orderBy('id', 'DESC')
+            ->take(6)->get();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'article_detail' => $article,
+                'related_articles' => $category_articles,
+                'latest_categories' => $latest_categories,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
 }

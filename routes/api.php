@@ -43,6 +43,7 @@ Route::get('/getUserReviews','Frontend\HomePageController@getUserReviews');
 Route::get('/getAllTherapists','Frontend\HomePageController@getAllTherapists');
 Route::get('/getLatest9Categories','Frontend\HomePageController@getLatest9Categories');
 Route::get('/getAllArticles','Frontend\HomePageController@getAllArticles');
+Route::post('/getSingleArticle','Frontend\HomePageController@getSingleArticle');
 
 //-----------------------------------------------------------------------------------------//
 // Patient Apis starts here
