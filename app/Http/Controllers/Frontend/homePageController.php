@@ -340,7 +340,7 @@ class HomePageController extends Controller
     }
     // get getAllArticles api ends here
     //---------------------------------------------------------------------------------------/
-    // get getLatestSevenCategories api starts here
+    // get getSingleArticle api starts here
     public function getSingleArticle(request $request){
         $validator = Validator::make($request->all(), [
             'slug' => 'required',
@@ -359,6 +359,7 @@ class HomePageController extends Controller
             $category_articles = articles::select('articles.id','articles.title','articles.slug','articles.image',
             'articles.description' ,'articles.created_at')
             ->where('category_id', $article->category_id)
+            ->where('id','!=',$article->id)
             ->take(5)->get();
             //getting latest 6 categories
             $latest_categories = category::select('categories.id','categories.title')
@@ -380,4 +381,36 @@ class HomePageController extends Controller
             ]);
         }
     }
+    // get getSingleArticle api ends here
+    //---------------------------------------------------------------------------------------/
+    // get getSingleCategoryArticles api starts here
+    public function getSingleCategoryArticles(request $request){
+        $validator = Validator::make($request->all(), [
+            'cat_name' => 'required',
+            
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $cat_exist = category::where('title', $request->cat_name)->first();
+        if($cat_exist)
+        {
+            $category_articles = articles::where('category_id', $cat_exist->id)->paginate(5);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $category_articles,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
+    // get getSingleCategoryArticles api ends here
+    //---------------------------------------------------------------------------------------/
 }
