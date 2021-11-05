@@ -109,7 +109,7 @@ class HomePageController extends Controller
     //---------------------------------------------------------------------------------------/
     // get getLatestEightArticles api starts here
     public function getLatestEightArticles(){
-        $latest_articles = articles::select('id','title','description')
+        $latest_articles = articles::select('id','title','short_description','description')
         ->orderBy('id', 'DESC')
         ->take(8)->get();
         if($latest_articles)
@@ -132,7 +132,7 @@ class HomePageController extends Controller
     //---------------------------------------------------------------------------------------//
     // get getAllCategoriesArticles api starts here
     public function getAllCategoriesArticles(){
-        $latest_articles = articles::select('id','title', 'category_id','description')
+        $latest_articles = articles::select('id','title', 'category_id','short_description','description')
         ->groupBy('category_id')->orderby('id', 'desc')->take(6)
         ->get();
         $count = count($latest_articles);
