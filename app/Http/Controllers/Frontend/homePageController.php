@@ -166,7 +166,7 @@ class HomePageController extends Controller
         $latest_articles = articles::inRandomOrder()
         ->join('users', 'articles.published_by', '=', 'users.id')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
-        ->select('articles.id','articles.title as article_title', 'articles.description', 'articles.image', 
+        ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
         'categories.title as category_title','users.full_name')
         ->groupBy('category_id')->orderby('articles.id', 'desc')->take(3)
         ->get();
