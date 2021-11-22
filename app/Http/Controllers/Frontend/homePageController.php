@@ -224,12 +224,13 @@ class HomePageController extends Controller
     // get getAllTherapists api starts here
     public function getAllTherapists(){
         $therapists = User::select('users.id','users.full_name','users.image',
-        'categories.title as category_title','therapist_details.profession','therapist_details.specialization')
+        'categories.title as category_title','therapist_locations.address','therapist_details.therapist_fee')
         ->join('therapist_details', 'users.id', '=', 'therapist_details.therapist_id')
+        ->join('therapist_locations', 'users.id', '=', 'therapist_locations.therapist_id')
         ->join('categories', 'therapist_details.category_id', '=', 'categories.id')
         ->where('users.is_therapist', true)
         ->get();
-
+        // dd($therapists);
         if($therapists)
         {     
             foreach($therapists as $single_therapist)
