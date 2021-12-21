@@ -229,7 +229,7 @@ class HomePageController extends Controller
         ->join('therapist_locations', 'users.id', '=', 'therapist_locations.therapist_id')
         ->join('categories', 'therapist_details.category_id', '=', 'categories.id')
         ->where('users.is_therapist', true)
-        ->get();
+        ->take(5)->get();
         // dd($therapists);
         if($therapists)
         {     
