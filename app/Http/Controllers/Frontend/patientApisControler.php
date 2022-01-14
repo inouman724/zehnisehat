@@ -17,7 +17,7 @@ class patientApisControler extends Controller
     // }
     // above function needs to be uncommented if the middleware needs to be used here.
     // Get Patient Appointments Api starts here
-    public function getPatientAppointments(Request $request){
+    public function getPatientData(Request $request){
         // $validator = Validator::make($request->all(), [
         //     'user_id' => 'required',
         // ]);

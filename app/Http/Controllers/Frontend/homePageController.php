@@ -9,11 +9,43 @@ use Validator;
 use App\category;
 use App\articles;
 use App\therapistReview;
+use App\therapistDetails;
+use App\therapist_education;
+use App\therapist_work_experience;
 use App\User;
 use App\categoryTag;
 use Illuminate\Support\Str;
 class HomePageController extends Controller
 {
+    public function getSingleTherapistData(Request $request){
+        $therapist_id = $request->therapist_id;
+
+        $single_therapist = User::where('id','like',$therapist_id) -> first();
+        $therapist_details = therapistDetails::where('therapist_id','like',$therapist_id) -> first();
+        $therapist_education = therapist_education::where('therapist_id', $therapist_id)->get();
+        $single_work = therapist_work_experience::where('therapist_id', $therapist_id)->get();
+        
+        if($single_therapist){
+            $therapist_data = array();
+            $therapist_data['login_info'] = $single_therapist;
+            $therapist_data['therapist_details'] = $therapist_details;
+            $therapist_data['therapist_education'] = $therapist_education;
+            $therapist_data['therapist_work'] = $single_work;
+            return response()->json([
+                'status' => true,
+                'messge' => 'Data found',
+                'data' => $therapist_data,
+            ]);
+        }
+        else{
+            return response()->json([
+                'status' => false,
+                'messge' => 'No data found',
+            ]);
+        }
+
+
+    }
     // get Latest category api starts here
     public function getSingleLatestCategory(){
         $latest_category = category::select('categories.id','categories.title', 'categories.created_at', 'users.full_name')
@@ -223,14 +255,15 @@ class HomePageController extends Controller
     //---------------------------------------------------------------------------------------/
     // get getAllTherapists api starts here
     public function getAllTherapists(){
-        $therapists = User::select('users.id','users.full_name','users.image',
+        $therapists = User::select('users.id','users.full_name','users.image','users.postal_adress','users.gender',
         'categories.title as category_title','therapist_locations.address','therapist_details.therapist_fee')
         ->join('therapist_details', 'users.id', '=', 'therapist_details.therapist_id')
         ->join('therapist_locations', 'users.id', '=', 'therapist_locations.therapist_id')
         ->join('categories', 'therapist_details.category_id', '=', 'categories.id')
+        // ->join('therapist_education', 'users.id', '=', 'therapist_education.therapist_id')
         ->where('users.is_therapist', true)
-        ->take(5)->get();
-        // dd($therapists);
+        ->get();
+         //dd($therapists);
         if($therapists)
         {     
             foreach($therapists as $single_therapist)
