@@ -159,10 +159,6 @@ class adminApisController extends Controller
         
     }
 
-
-
-
-
     public function getTherapistWorkData(Request $request){
         $therapist_id = $request->therapist_id;
 
@@ -627,6 +623,7 @@ class adminApisController extends Controller
         // $user_exist = User::find($id);
         // if($user_exist)
         // {
+            //dd('in');
             // $admin_data = User::where('id', '=', $id)->pluck('full_name');
             $admin_data = User::where('id', '=', 1)->pluck('full_name');
             $total_therapists = User::where('is_therapist', '=', '1')->get();

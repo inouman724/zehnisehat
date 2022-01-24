@@ -11,12 +11,69 @@ use App\articles;
 use App\therapistReview;
 use App\therapistDetails;
 use App\therapist_education;
+use App\therapist_locations;
 use App\therapist_work_experience;
+use App\patientAppointment;
 use App\User;
 use App\categoryTag;
 use Illuminate\Support\Str;
 class HomePageController extends Controller
 {
+    public function bookAppointmentData(Request $request){
+        
+        $user = new User;
+            $user->full_name = $request->patient_full_name;
+            $user->phone_number = $request->patient_phone;
+            $user->email = $request->patient_email;
+            $user->password = bcrypt($request->patient_password);
+            $user->is_email_verified = false;
+            $user->is_verified_by_admin = false;
+            $user->is_admin = false;
+            $user->is_patient = true;
+            $user->is_therapist = false;
+
+            $duplicate_entry = User::where('email','like',$request->patient_email) -> first();
+            if($duplicate_entry){
+                
+                return response()->json([
+                    'status' => false,
+                    'messge' => 'Email Already Registered',
+                ]);
+            }
+            else{
+                if($user->save())
+                {
+                    $last_id = $user->id;
+                    $appointment_details = new patientAppointment;
+                    $appointment_details->patient_id = $last_id;
+                    $appointment_details->therapist_id = $request->therapist_id;
+                    $appointment_details->checkup_day_time = $request->dateTime;
+                    $appointment_details->status = 'booked';
+                    
+                    if($appointment_details->save()){
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Appointment Booked Successfully',
+                        ]);
+                    }
+                    else{
+                        return response()->json([
+                            'status' => true,
+                            'messge' => 'Something Went Wrong with Appointment details',
+                        ]);
+
+                    }
+
+                }
+                else{
+                    return response()->json([
+                        'status' => true,
+                        'messge' => 'Something Went Wrong with User',
+                    ]);
+                }
+
+            }
+    }
     public function getSingleTherapistData(Request $request){
         $therapist_id = $request->therapist_id;
 
@@ -24,6 +81,8 @@ class HomePageController extends Controller
         $therapist_details = therapistDetails::where('therapist_id','like',$therapist_id) -> first();
         $therapist_education = therapist_education::where('therapist_id', $therapist_id)->get();
         $single_work = therapist_work_experience::where('therapist_id', $therapist_id)->get();
+        $single_locations = therapist_locations::where('therapist_id', $therapist_id)->get();
+        $single_reviews = therapistReview::where('therapist_id', $therapist_id)->get();
         
         if($single_therapist){
             $therapist_data = array();
@@ -31,6 +90,8 @@ class HomePageController extends Controller
             $therapist_data['therapist_details'] = $therapist_details;
             $therapist_data['therapist_education'] = $therapist_education;
             $therapist_data['therapist_work'] = $single_work;
+            $therapist_data['therapist_locations'] = $single_locations;
+            $therapist_data['therapist_reviews'] = $single_reviews;
             return response()->json([
                 'status' => true,
                 'messge' => 'Data found',

@@ -2,32 +2,31 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     // return $request->user();
-//     Route::post('getPatientAppointments','Frontend\patientApisControler@getPatientAppointments');
-
-// });
 // Registeration and login apis starts here
 Route::post('/register','Frontend\registerationController@register');
-// Route::post('/login','Frontend\registerationController@login');
 Route::post('login', [ 'as' => 'login', 'uses' => 'Frontend\registerationController@login']);
 
+
+
+
+//-----------------------------------------------------------------------------------------//
+// Passport apis starts here
 Route::middleware(['auth:api'])->group(function () { 
-    Route::post('getPatientData','Frontend\patientApisControler@getPatientData')->middleware('CheckIsPatient');
 
+    // THERAPIST-DASHBOARD
+    Route::get('getTherapistData','Frontend\therapistApisControler@getTherapistData')->middleware('CheckIsTherapist');
+    Route::get('getTherapistDashboardData','Frontend\therapistApisControler@getTherapistDashboardData')->middleware('CheckIsTherapist');
+    Route::get('getTherapistPatientData','Frontend\therapistApisControler@getTherapistPatientData')->middleware('CheckIsTherapist');
 
-
+    
+    // PATIENT-DASHBOARD
+    Route::get('getPatientData','Frontend\patientApisControler@getPatientData')->middleware('CheckIsPatient');
+    Route::get('getPatientAppointmentData','Frontend\patientApisControler@getPatientAppointmentData')->middleware('CheckIsPatient');
+    Route::post('updatePatientInfoData','Frontend\patientApisControler@updatePatientInfoData')->middleware('CheckIsPatient');
+    Route::post('updatePatientPassword','Frontend\patientApisControler@updatePatientPassword')->middleware('CheckIsPatient');
+    
+    
     // ADMIN-DASHBOARD
     Route::get('getAdminDashboard','Admin\adminApisController@getAdminDashboardData')->middleware('CheckIsAdmin');
     Route::get('getAllAppointments','Admin\adminApisController@getAllAppointmentsData')->middleware('CheckIsAdmin');
@@ -50,16 +49,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('getTherapistWorkInfo','Admin\adminApisController@getTherapistWorkData')->middleware('CheckIsAdmin');
     Route::post('adminAddTherapistWorkInfo','Admin\adminApisController@adminAddTherapistWorkInfoData')->middleware('CheckIsAdmin');
 
-
-
-
-
-
-
-
-
 });
 
+//-----------------------------------------------------------------------------------------//
 // homepage apis starts here
 // Route::get('/getallarticles','Frontend\ArticleController@getallarticles');
 Route::get('/getSingleLatestCategory','Frontend\HomePageController@getSingleLatestCategory');
@@ -74,19 +66,11 @@ Route::get('/getLatest9Categories','Frontend\HomePageController@getLatest9Catego
 Route::get('/getAllArticles','Frontend\HomePageController@getAllArticles');
 Route::post('/getSingleArticle','Frontend\HomePageController@getSingleArticle');
 Route::post('/getSingleCategoryArticles','Frontend\HomePageController@getSingleCategoryArticles');
-
-
 // SINGLE THERAPIST
 Route::post('/getSingleTherapist','Frontend\HomePageController@getSingleTherapistData');
+Route::post('/getSingleTherapistEducation','Frontend\HomePageController@getSingleTherapistEducationData');
+// BOOK APPOINTMENT
+Route::post('/bookAppointment','Frontend\HomePageController@bookAppointmentData');
 
-//-----------------------------------------------------------------------------------------//
-// Patient Apis starts here
-// Route::post('getPatientAppointments','Frontend\patientApisControler@getPatientAppointments');
 
-
-Route::middleware(['CheckRole'])->group(function(){
- 
-    Route::post('home', 'Frontend\registerationController@home');
-    
-});
 
