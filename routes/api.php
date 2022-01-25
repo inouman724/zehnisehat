@@ -18,6 +18,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('getTherapistData','Frontend\therapistApisControler@getTherapistData')->middleware('CheckIsTherapist');
     Route::get('getTherapistDashboardData','Frontend\therapistApisControler@getTherapistDashboardData')->middleware('CheckIsTherapist');
     Route::get('getTherapistPatientData','Frontend\therapistApisControler@getTherapistPatientData')->middleware('CheckIsTherapist');
+    Route::get('getTherapistReviewsData','Frontend\therapistApisControler@getTherapistReviewsData')->middleware('CheckIsTherapist');
+    Route::get('getTherapistGeneralData','Frontend\therapistApisControler@getTherapistGeneralDataForPortal')->middleware('CheckIsTherapist');
+    Route::get('getTherapistAllSpecialitites','Frontend\therapistApisControler@getTherapistAllSpecialititesData')->middleware('CheckIsTherapist');
+    Route::post('updateAllTherapistData','Frontend\therapistApisControler@updateAllTherapistData')->middleware('CheckIsTherapist');
+    Route::post('updateTherapistPassword','Frontend\therapistApisControler@updateTherapistPasswordData')->middleware('CheckIsTherapist');
 
     
     // PATIENT-DASHBOARD
