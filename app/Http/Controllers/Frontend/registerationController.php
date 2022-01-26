@@ -17,6 +17,58 @@ class registerationController extends Controller
 {
     //-----------------------------------------------------------------------------------------//
     //register user api starts here
+    public function registerTherapist(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'full_name' => 'required',
+            'role' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            // 'c_password' => 'required|same:password',
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }            
+        $user = new User;
+        
+        if($request->role == 'therapist')
+        {
+            $user->is_therapist = true;
+            $user->is_patient = false;
+            $user->is_admin = false;
+        }
+        $user->full_name = $request->full_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->is_email_verified = false;
+        $user->is_verified_by_admin = false;
+        $user->_token = str_random(16); 
+        if($user->save())
+        {
+            $data = (object) [
+                'status' => true,
+                'messge' => 'User registered successfully.',
+            ];
+            // return $this->sendResponse($this->success, 'User register successfully.');       
+            return response()->json([
+                'data' => $data,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'something went wrong',
+            ]);
+        }
+
+        // $success['token'] =  $user->createToken('ZehniSehatUser')->accessToken;
+        // $success['full_name'] =  $user->full_name;
+        // return $this->sendResponse($success, 'User register successfully.');
+        // $token =  $user->createToken('ZehniSehatUser')->accessToken;
+        
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [

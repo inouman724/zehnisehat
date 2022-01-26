@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 
 // Registeration and login apis starts here
 Route::post('/register','Frontend\registerationController@register');
+Route::post('/registerTherapist','Frontend\registerationController@registerTherapist');
 Route::post('login', [ 'as' => 'login', 'uses' => 'Frontend\registerationController@login']);
 
 
@@ -65,10 +66,13 @@ Route::get('/getLatestcategoriesArticles','Frontend\HomePageController@getLatest
 Route::get('/getLatestEightArticles','Frontend\HomePageController@getLatestEightArticles');
 Route::get('/getAllCategoriesArticles','Frontend\HomePageController@getAllCategoriesArticles');
 Route::get('/getRandomArticles','Frontend\HomePageController@getRandomArticles');
+Route::get('/getBlogArticles','Frontend\HomePageController@getBlogArticlesData');
 Route::get('/getUserReviews','Frontend\HomePageController@getUserReviews');
 Route::get('/getAllTherapists','Frontend\HomePageController@getAllTherapists');
+Route::post('/getAllFilteredTherapists','Frontend\HomePageController@getAllFilteredTherapists');
 Route::get('/getLatest9Categories','Frontend\HomePageController@getLatest9Categories');
 Route::get('/getAllArticles','Frontend\HomePageController@getAllArticles');
+Route::get('/getAllHomeCategories','Frontend\HomePageController@getAllHomeCategories');
 Route::post('/getSingleArticle','Frontend\HomePageController@getSingleArticle');
 Route::post('/getSingleCategoryArticles','Frontend\HomePageController@getSingleCategoryArticles');
 // SINGLE THERAPIST

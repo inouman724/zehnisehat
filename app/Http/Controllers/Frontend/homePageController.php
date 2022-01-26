@@ -17,8 +17,48 @@ use App\patientAppointment;
 use App\User;
 use App\categoryTag;
 use Illuminate\Support\Str;
+use DB;
+
+
+
 class HomePageController extends Controller
 {
+    public function getAllHomeCategories(){
+        $latest_categories = category::select('categories.id','categories.title','categories.picture',
+        'categories.description' ,'categories.created_at', 
+        'users.full_name')
+        ->join('users', 'categories.published_by', '=', 'users.id')
+        ->orderBy('id', 'DESC')
+        ->get();
+        // dd($latest_categories);
+        if($latest_categories)
+        {
+            foreach($latest_categories as $single_latest_category)
+            {
+                $short_des = Str::limit($single_latest_category->description, 150);
+                // Str::words($this->$single_latest_category->description, '25');
+                $single_latest_category->short_des = $short_des;
+                // dd($short_des);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_categories,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_categories,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
     public function bookAppointmentData(Request $request){
         
         $user = new User;
@@ -84,6 +124,11 @@ class HomePageController extends Controller
         $single_locations = therapist_locations::where('therapist_id', $therapist_id)->get();
         $single_reviews = therapistReview::where('therapist_id', $therapist_id)->get();
         
+        $single_category = therapistDetails::select('categories.title')
+        ->join('categories', 'categories.id', '=', 'therapist_details.category_id')
+        ->where('therapist_details.therapist_id', $therapist_id)
+        ->get();
+        
         if($single_therapist){
             $therapist_data = array();
             $therapist_data['login_info'] = $single_therapist;
@@ -92,6 +137,8 @@ class HomePageController extends Controller
             $therapist_data['therapist_work'] = $single_work;
             $therapist_data['therapist_locations'] = $single_locations;
             $therapist_data['therapist_reviews'] = $single_reviews;
+            $therapist_data['therapist_specialization'] = $single_category;
+
             return response()->json([
                 'status' => true,
                 'messge' => 'Data found',
@@ -252,6 +299,37 @@ class HomePageController extends Controller
             ]);
         }
     }
+    public function getBlogArticlesData(){
+        $latest_articles = articles::inRandomOrder()
+        ->join('users', 'articles.published_by', '=', 'users.id')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
+        'categories.title as category_title','users.full_name')
+        ->groupBy('category_id')->orderby('articles.id', 'desc')
+        ->get();
+        $count = count($latest_articles);
+        if($count>0)
+        {       
+            foreach($latest_articles as $single_article)
+            {
+                $short_des = Str::limit($single_article->description, 150);
+                $single_article->short_des = $short_des;
+                // dd($short_des);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Found',
+                'data' => $latest_articles,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
     // get getAllCategoriesArticles api ends here
     //---------------------------------------------------------------------------------------/
     // get getRandomArticles api starts here
@@ -294,7 +372,7 @@ class HomePageController extends Controller
         'users.full_name','users.image')
         ->where('rating' , '>=','4')
         ->join('users', 'therapist_reviews.patient_id', '=', 'users.id')
-        ->orderby('therapist_reviews.id', 'desc')->take(9)
+        ->orderby('therapist_reviews.id', 'desc')->take(3)
         ->get();
         if($latest_reviews)
         {       
@@ -311,6 +389,45 @@ class HomePageController extends Controller
                 'message' => 'Data Not Found',
             ]);
         }
+    }
+    public function getAllFilteredTherapists(Request $request){
+        $categories = $request->categories;
+
+        if(count($categories)==0){
+            return $this->getAllTherapists();
+        }
+        else{
+            $values=implode(",",$categories);
+            $query="SELECT 
+            therapist_details.category_id, therapist_details.therapist_fee,
+            categories.title as category_title,
+            users.id, users.full_name, users.image, users.postal_adress, users.gender  
+            FROM therapist_details 
+            LEFT JOIN users
+            ON users.id = therapist_details.therapist_id
+            LEFT JOIN categories
+            ON categories.id = therapist_details.category_id
+            WHERE therapist_details.category_id IN ($values) ORDER BY therapist_details.id DESC";
+
+            $therapists = DB::select($query);
+            if($therapists){
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Data Found',
+                    'data' => $therapists,
+                ]);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => 'Data Not Found',
+                ]);
+            }
+
+        }
+
+        
+        
     }
     // get getUserReviews api ends here
     //---------------------------------------------------------------------------------------/
