@@ -340,7 +340,8 @@ class therapistApisControler extends Controller
             $total_patients = patientAppointment::where('therapist_id', $id)->get();
             $total_patients = count($total_patients);
             
-            $today = date('Y-m-d h:i:s');
+            $today = date('Y-m-d');
+           
             $sql = "SELECT b.*, users.full_name as patient_name
             FROM patient_appointments b
             LEFT JOIN users
@@ -349,15 +350,24 @@ class therapistApisControler extends Controller
             $today_patient = DB::select($sql);
             $total_today_patient = count($today_patient);
 
+
+
             $sql_upcoming = "SELECT a.*, users.full_name as patient_name
             FROM patient_appointments a
             LEFT JOIN users
             ON users.id = a.patient_id
-            WHERE DATE(checkup_day_time) >'$today' OR DATE(checkup_day_time) < '$today'  AND  therapist_id = '$id'";
+            WHERE  therapist_id = '$id'";
             //dd($sql_upcoming);
             $upcoming_appointments = DB::select($sql_upcoming);
             //dd($sql_upcoming);
-            
+            $upcoming_array = array();
+            foreach($upcoming_appointments as $singleAppointment){
+                $matching_date = strtok($singleAppointment->checkup_day_time, ' ');
+                if($matching_date > $today){
+                    array_push($upcoming_array,$singleAppointment);
+                }
+            }
+            //dd($upcoming_array);
             
             return response()->json([
                 'status' => 400,
@@ -366,7 +376,7 @@ class therapistApisControler extends Controller
                 'total_today_patients' => $total_today_patient,
                 'total_appointments' => $total_patients,
                 'today_appointments' => $today_patient,
-                'upcoming_appointments' => $upcoming_appointments,
+                'upcoming_appointments' => $upcoming_array,
             ]);
 
 
