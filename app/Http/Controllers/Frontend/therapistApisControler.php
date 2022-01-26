@@ -340,7 +340,7 @@ class therapistApisControler extends Controller
             $total_patients = patientAppointment::where('therapist_id', $id)->get();
             $total_patients = count($total_patients);
             
-            $today = new date('Y-m-d h:i:s');
+            $today = date('Y-m-d h:i:s');
             $sql = "SELECT b.*, users.full_name as patient_name
             FROM patient_appointments b
             LEFT JOIN users
