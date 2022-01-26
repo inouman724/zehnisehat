@@ -356,6 +356,7 @@ class therapistApisControler extends Controller
             WHERE DATE(checkup_day_time) >'$today' OR DATE(checkup_day_time) < '$today'  AND  therapist_id = '$id'";
             //dd($sql_upcoming);
             $upcoming_appointments = DB::select($sql_upcoming);
+            dd($sql_upcoming);
             
             
             return response()->json([
