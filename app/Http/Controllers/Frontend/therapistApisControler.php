@@ -14,6 +14,39 @@ use DB;
 
 class therapistApisControler extends Controller
 {
+    public function changeAppointmentStatus(Request $request){
+        $id = $request->user()->id;
+        $therapist_details = User::find($id);
+        if($therapist_details)
+        {
+            $apointment_id = $request->appointment_id;
+            $apointment_date = $request->date_time;
+            $updateDetails = [
+                'status' => 'confirmed',
+                'checkup_day_time' => $apointment_date
+            
+            ];
+            $new_appointment = patientAppointment::where('id',$apointment_id)->update($updateDetails);
+            if($new_appointment){
+                return response()->json([
+                    'status' => true,
+                    'messge' => 'Appointment Updated Successfully',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'messge' => 'Something Went Wrong',
+                ]);
+            }
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Not Found',
+            ]);
+        }
+    }
     public function updateTherapistPasswordData(Request $request){
         $id = $request->user()->id;
         $therapist_details = User::find($id);
@@ -319,7 +352,8 @@ class therapistApisControler extends Controller
             FROM patient_appointments a
             LEFT JOIN users
             ON users.id = a.patient_id
-            WHERE DATE(checkup_day_time) >'$today'  AND  therapist_id = '$id'";
+            WHERE DATE(checkup_day_time) >'$today' OR DATE(checkup_day_time) < '$today'  AND  therapist_id = '$id'";
+            //dd($sql_upcoming);
             $upcoming_appointments = DB::select($sql_upcoming);
             
             
