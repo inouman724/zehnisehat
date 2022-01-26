@@ -334,6 +334,7 @@ class therapistApisControler extends Controller
     public function getTherapistDashboardData(Request $request){
         $id = $request->user()->id;
         $therapist_details = User::find($id);
+        date_default_timezone_set("Asia/Karachi");
         if($therapist_details)
         {
             $total_patients = patientAppointment::where('therapist_id', $id)->get();
