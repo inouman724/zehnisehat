@@ -10,10 +10,129 @@ use App\patientAppointment;
 use App\therapistDetails;
 use App\therapist_education;
 use App\therapist_work_experience;
+use App\therapist_availabilities;
 use DB;
 
 class therapistApisControler extends Controller
 {
+    public function updateTherapistMondaySlots(Request $request){
+        $id = $request->user()->id;
+        $therapist_details = User::find($id);
+        if($therapist_details)
+        {
+            $monday_slots = $request->monday_slots;
+            $day = $request->day;
+
+
+            $deletedRows = therapist_availabilities::where('therapist_id', $id)
+            ->where('available_day', $day)
+            ->delete();
+
+            
+            $monday_slots_counter = count($monday_slots);
+            for($i=0;  $i<$monday_slots_counter; $i++){
+                                
+                $therapist_monday_slots_details = new therapist_availabilities;
+                $therapist_monday_slots_details->therapist_id = $id;
+                $therapist_monday_slots_details->available_day = $day;
+                $therapist_monday_slots_details->start_time = $monday_slots[$i]['start_time'];
+                $therapist_monday_slots_details->end_time = $monday_slots[$i]['end_time'];
+                $therapist_monday_slots_details->status = 'available';
+                $therapist_monday_slots_details->save();
+            }
+            if($therapist_monday_slots_details){
+                return response()->json([
+                    'status' => true,
+                    'messge' => 'Monday Slots Updated Successfully',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'messge' => 'Something Went Wrong',
+                ]);
+            }
+        }
+        else{
+            return response()->json([
+                'status' => false,
+                'messge' => 'No data found',
+            ]);
+        }
+
+    }
+    public function getTherapistAvailabilities(Request $request){
+        $id = $request->user()->id;
+        $therapist_details = User::find($id);
+        if($therapist_details)
+        {
+            $monday_data = array();
+            $tuesday_data = array();
+            $wednesday_data = array();
+            $thursday_data = array();
+            $friday_data = array();
+            $saturday_data = array();
+            $sunday_data = array();
+            $all_data = array();
+            $therapist_availabilities = therapist_availabilities::where('therapist_id', $id)->get();
+            if($therapist_availabilities){
+
+                foreach($therapist_availabilities as $single_availability){
+                    if($single_availability->available_day == 'Monday'){
+                        array_push($monday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Tuesday'){
+                        array_push($tuesday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Wednesday'){
+                        array_push($wednesday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Thursday'){
+                        array_push($thursday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Friday'){
+                        array_push($friday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Saturday'){
+                        array_push($saturday_data,$single_availability);
+                    }
+                    if($single_availability->available_day == 'Sunday'){
+                        array_push($sunday_data,$single_availability);
+                    }
+                    
+                }
+                $all_data['monday_data'] = $monday_data;
+                $all_data['tuesday_data'] = $tuesday_data;
+                $all_data['wednesday_data'] = $wednesday_data;
+                $all_data['thursday_data'] = $thursday_data;
+                $all_data['friday_data'] = $friday_data;
+                $all_data['saturday_data'] = $saturday_data;
+                $all_data['sunday_data'] = $sunday_data;
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'data found',
+                    'data' => $all_data
+                ]);
+                
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'messge' => 'No data found',
+                ]);
+            }
+            
+        }
+        else{
+            return response()->json([
+                'status' => false,
+                'messge' => 'Something Went Wrong',
+            ]);
+        }
+         
+
+    }
     public function changeAppointmentStatus(Request $request){
         $id = $request->user()->id;
         $therapist_details = User::find($id);

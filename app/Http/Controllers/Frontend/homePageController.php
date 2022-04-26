@@ -185,7 +185,7 @@ class HomePageController extends Controller
         'users.full_name')
         ->join('users', 'categories.published_by', '=', 'users.id')
         ->orderBy('id', 'DESC')
-        ->take(7)->get();
+        ->take(5)->get();
         // dd($latest_categories);
         if($latest_categories)
         {

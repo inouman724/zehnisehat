@@ -25,6 +25,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('updateAllTherapistData','Frontend\therapistApisControler@updateAllTherapistData')->middleware('CheckIsTherapist');
     Route::post('updateTherapistPassword','Frontend\therapistApisControler@updateTherapistPasswordData')->middleware('CheckIsTherapist');
     Route::post('changeAppointmentStatus','Frontend\therapistApisControler@changeAppointmentStatus')->middleware('CheckIsTherapist');
+    Route::get('getTherapistAvailabilities','Frontend\therapistApisControler@getTherapistAvailabilities')->middleware('CheckIsTherapist');
+    Route::post('updateTherapistMondaySlots','Frontend\therapistApisControler@updateTherapistMondaySlots')->middleware('CheckIsTherapist');
 
     
     // PATIENT-DASHBOARD
