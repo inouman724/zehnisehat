@@ -106,7 +106,7 @@ class patientApisControler extends Controller
         if($patient_details)
         {
             $sql  ="
-            SELECT patient_appointments.checkup_day_time, patient_appointments.status, users.full_name,categories.title as therapist_speciality, patient_appointments.created_at
+            SELECT patient_appointments.checkup_day_time, patient_appointments.status, users.full_name, users.phone_number,categories.title as therapist_speciality, patient_appointments.created_at
             FROM patient_appointments 
             LEFT JOIN users 
             ON patient_appointments.therapist_id =  users.id
