@@ -302,10 +302,10 @@ class HomePageController extends Controller
     public function getBlogArticlesData(){
         $latest_articles = articles::inRandomOrder()
         ->join('users', 'articles.published_by', '=', 'users.id')
-        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->rightJoin('categories', 'categories.id', '=', 'articles.category_id')
         ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
         'categories.title as category_title','users.full_name')
-        ->orderby('articles.id', 'desc')
+        ->groupBy('category_id')->orderby('articles.id', 'desc')
         ->get();
         $count = count($latest_articles);
         if($count>0)
