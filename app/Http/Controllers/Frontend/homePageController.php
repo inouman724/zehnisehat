@@ -308,29 +308,29 @@ class HomePageController extends Controller
         // ->groupBy('category_id')->orderby('articles.id', 'desc')
         // ->get();
         // dd($latest_articles);
-        $count = count($latest_articles);
-        if($count>0)
-        {       
-            foreach($latest_articles as $single_article)
-            {
-                //dd($single_article->category);
-                $short_des = Str::limit($single_article->description, 150);
-                $single_article->short_des = $short_des;
-                // dd($short_des);
-            }
+        // $count = count($latest_articles);
+        // if($count>0)
+        // {       
+        //     foreach($latest_articles as $single_article)
+        //     {
+        //         //dd($single_article->category);
+        //         $short_des = Str::limit($single_article->description, 150);
+        //         $single_article->short_des = $short_des;
+        //         // dd($short_des);
+        //     }
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Found',
                 'data' => $latest_articles,
             ]);
-        }
-        else
-        {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Data Not Found',
-            ]);
-        }
+        // }
+        // else
+        // {
+        //     return response()->json([
+        //         'status' => 400,
+        //         'message' => 'Data Not Found',
+        //     ]);
+        // }
     }
     // get getAllCategoriesArticles api ends here
     //---------------------------------------------------------------------------------------/
