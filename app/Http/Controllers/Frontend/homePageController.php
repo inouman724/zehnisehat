@@ -300,20 +300,20 @@ class HomePageController extends Controller
         }
     }
     public function getBlogArticlesData(){
-        $latest_articles = articles::with('category', 'published_by')->take(2)->get();
-        // ->inRandomOrder();
+        $latest_articles = articles::with('category', 'published_by')->inRandomOrder();
         // ->join('users', 'articles.published_by', '=', 'users.id')
         // ->rightJoin('categories', 'categories.id', '=', 'articles.category_id')
         // ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
         // 'categories.title as category_title','users.full_name')
         // ->groupBy('category_id')->orderby('articles.id', 'desc')
         // ->get();
-        dd($latest_articles);
+        // dd($latest_articles);
         $count = count($latest_articles);
         if($count>0)
         {       
             foreach($latest_articles as $single_article)
             {
+                //dd($single_article->category);
                 $short_des = Str::limit($single_article->description, 150);
                 $single_article->short_des = $short_des;
                 // dd($short_des);
