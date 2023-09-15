@@ -305,7 +305,7 @@ class HomePageController extends Controller
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
         'categories.title as category_title','users.full_name')
-        ->groupBy('category_id')->orderby('articles.id', 'desc')
+        ->orderby('articles.id', 'desc')
         ->get();
         $count = count($latest_articles);
         if($count>0)
