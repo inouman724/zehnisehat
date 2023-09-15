@@ -300,7 +300,7 @@ class HomePageController extends Controller
         }
     }
     public function getBlogArticlesData(){
-        $latest_articles = articles::with('category', 'published_by')->inRandomOrder();
+        $latest_articles = articles::with('category', 'published_by')->take(50)->get();
         // ->join('users', 'articles.published_by', '=', 'users.id')
         // ->rightJoin('categories', 'categories.id', '=', 'articles.category_id')
         // ->select('articles.id','articles.title as article_title','articles.short_description', 'articles.description', 'articles.image', 
